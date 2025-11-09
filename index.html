@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тесты для аттестации</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .test-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .test-btn {
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .test-btn:hover {
+            background-color: #45a049;
+        }
+        .test-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .options {
+            margin-top: 10px;
+        }
+        .option {
+            margin: 8px 0;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .option:hover {
+            background-color: #f0f0f0;
+        }
+        .correct {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .nav-btn {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .nav-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .results {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .back-btn {
+            padding: 10px 15px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Тесты для аттестации</h1>
+        
+        <div id="main-menu">
+            <h2>Выберите тест:</h2>
+            <div class="test-list">
+                <button class="test-btn" onclick="showTest('ict')">ИКТ-компетентность</button>
+                <button class="test-btn" onclick="showTest('personnel')">Управление персоналом</button>
+                <button class="test-btn" onclick="showTest('forecasting')">Прогнозирование и ФГОС</button>
+                <button class="test-btn" onclick="showTest('management')">Образовательный менеджмент</button>
+                <button class="test-btn" onclick="showTest('marketing')">Маркетинг</button>
+                <button class="test-btn" onclick="showTest('law')">Закон об образовании</button>
+                <button class="test-btn" onclick="showTest('sanpin')">СанПиН</button>
+            </div>
+        </div>
+
+        <!-- Контейнеры для тестов -->
+        <div id="ict-test" class="test-container">
+            <button class="back-btn" onclick="showMainMenu()">← Назад к выбору теста</button>
+            <h2>Тест по ИКТ-компетентности</h2>
+            <div id="ict-questions"></div>
+            <div class="navigation">
+                <button class="nav-btn" id="ict-prev" onclick="prevQuestion('ict')" disabled>Предыдущий</button>
+                <button class="nav-btn" id="ict-next" onclick="nextQuestion('ict')">Следующий</button>
+            </div>
+            <div class="results" id="ict-results"></div>
+        </div>
+
+        <!-- Аналогичные контейнеры для других тестов -->
+        <div id="personnel-test" class="test-container">
+            <button class="back-btn" onclick="showMainMenu()">← Назад к выбору теста</button>
+            <h2>Тест по управлению персоналом</h2>
+            <div id="personnel-questions"></div>
+            <div class="navigation">
+                <button class="nav-btn" id="personnel-prev" onclick="prevQuestion('personnel')" disabled>Предыдущий</button>
+                <button class="nav-btn" id="personnel-next" onclick="nextQuestion('personnel')">Следующий</button>
+            </div>
+            <div class="results" id="personnel-results"></div>
+        </div>
+
+        <div id="forecasting-test" class="test-container">
+            <button class="back-btn" onclick="showMainMenu()">← Назад к выбору теста</button>
+            <h2>Тест по прогнозированию и ФГОС</h2>
+            <div id="forecasting-questions"></div>
+            <div class="navigation">
+                <button class="nav-btn" id="forecasting-prev" onclick="prevQuestion('forecasting')" disabled>Предыдущий</button>
+                <button class="nav-btn" id="forecasting-next" onclick="nextQuestion('forecasting')">Следующий</button>
+            </div>
+            <div class="results" id="forecasting-results"></div>
+        </div>
+
+        <div id="management-test" class="test-container">
+            <button class="back-btn" onclick="showMainMenu()">← Назад к выбору теста</button>
+            <h2>Тест по образовательному менеджменту</h2>
+            <div id="management-questions"></div>
+            <div class="navigation">
+                <button class="nav-btn" id="management-prev" onclick="prevQuestion('management')" disabled>Предыдущий</button>
+                <button class="nav-btn" id="management-next" onclick="nextQuestion('management')">Следующий</button>
+            </div>
+            <div class="results" id="management-results"></div>
+        </div>
+
+        <div id="marketing-test" class="test-container">
+            <button class="back-btn" onclick="showMainMenu()">← Назад к выбору теста</button>
+            <h2>Тест по маркетингу</h2>
+            <div id="marketing-questions"></div>
+            <div class="navigation">
+                <button class="nav-btn" id="marketing-prev" onclick="prevQuestion('marketing')" disabled>Предыдущий</button>
+                <button class="nav-btn" id="marketing-next" onclick="nextQuestion('marketing')">Следующий</button>
+            </div>
+            <div class="results" id="marketing-results"></div>
+        </div>
+
+        <div id="law-test" class="test-container">
+            <button class="back-btn" onclick="showMainMenu()">← Назад к выбору теста</button>
+            <h2>Тест по закону об образовании</h2>
+            <div id="law-questions"></div>
+            <div class="navigation">
+                <button class="nav-btn" id="law-prev" onclick="prevQuestion('law')" disabled>Предыдущий</button>
+                <button class="nav-btn" id="law-next" onclick="nextQuestion('law')">Следующий</button>
+            </div>
+            <div class="results" id="law-results"></div>
+        </div>
+
+        <div id="sanpin-test" class="test-container">
+            <button class="back-btn" onclick="showMainMenu()">← Назад к выбору теста</button>
+            <h2>Тест по СанПиН</h2>
+            <div id="sanpin-questions"></div>
+            <div class="navigation">
+                <button class="nav-btn" id="sanpin-prev" onclick="prevQuestion('sanpin')" disabled>Предыдущий</button>
+                <button class="nav-btn" id="sanpin-next" onclick="nextQuestion('sanpin')">Следующий</button>
+            </div>
+            <div class="results" id="sanpin-results"></div>
+        </div>
+    </div>
+
+    <script>
+        // Данные тестов
+        const tests = {
+            ict: [
+                {
+                    question: "MicrosoftWord – это:",
+                    options: [
+                        "текстовый файл",
+                        "табличный редактор",
+                        "текстовый редактор",
+                        "записная книжка"
+                    ],
+                    correct: 2
+                },
+                {
+                    question: "Основные параметры абзаца в текстовом редакторе",
+                    options: [
+                        "отступ, интервал, выравнивание",
+                        "поля, ориентация, стиль",
+                        "размер, гарнитура, начертание"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "Как напечатанное слово сделать зачеркнутым?",
+                    options: [
+                        "это сделать невозможно",
+                        "для этого нужен специальный шрифт",
+                        "для этого надо изменить свойства шрифта у этого слова",
+                        "для этого надо изменить свойства шрифта и абзаца у этого слова"
+                    ],
+                    correct: 2
+                },
+                // Добавьте остальные вопросы по ИКТ здесь
+            ],
+            personnel: [
+                {
+                    question: "Какое управленческое действие не относится к функциям менеджмента персонала?",
+                    options: [
+                        "планирование",
+                        "прогнозирование",
+                        "мотивация",
+                        "составление отчетов",
+                        "организация"
+                    ],
+                    correct: 3
+                },
+                {
+                    question: "Управленческий персонал включает:",
+                    options: [
+                        "вспомогательных рабочих",
+                        "сезонных рабочих",
+                        "младший обслуживающий персонал",
+                        "руководителей, специалистов",
+                        "основных рабочих"
+                    ],
+                    correct: 3
+                },
+		{
+                    question: "фывфывфывф:",
+                    options: [
+                        "вспомогательных рабочих",
+                        "сезонных рабочих",
+                        "младший обслуживающий персонал",
+                        "руководителей, специалистов",
+                        "основных рабочих"
+                    ],
+                    correct: 3
+                },
+                // Добавьте остальные вопросы по управлению персоналом здесь
+            ],
+            // Добавьте данные для остальных тестов
+        };
+
+        // Текущий вопрос для каждого теста
+        const currentQuestions = {
+            ict: 0,
+            personnel: 0,
+            forecasting: 0,
+            management: 0,
+            marketing: 0,
+            law: 0,
+            sanpin: 0
+        };
+
+        // Показать главное меню
+        function showMainMenu() {
+            document.getElementById('main-menu').style.display = 'block';
+            const testContainers = document.querySelectorAll('.test-container');
+            testContainers.forEach(container => {
+                container.style.display = 'none';
+            });
+        }
+
+        // Показать выбранный тест
+        function showTest(testId) {
+            document.getElementById('main-menu').style.display = 'none';
+            const testContainer = document.getElementById(`${testId}-test`);
+            testContainer.style.display = 'block';
+            
+            // Загрузить вопросы для теста
+            loadQuestions(testId);
+        }
+
+        // Загрузить вопросы для теста
+        function loadQuestions(testId) {
+            const questionsContainer = document.getElementById(`${testId}-questions`);
+            questionsContainer.innerHTML = '';
+            
+            if (tests[testId] && tests[testId].length > 0) {
+                const question = tests[testId][currentQuestions[testId]];
+                
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+                questionElement.innerHTML = `
+                    <h3>Вопрос ${currentQuestions[testId] + 1} из ${tests[testId].length}</h3>
+                    <p>${question.question}</p>
+                    <div class="options">
+                        ${question.options.map((option, index) => `
+                            <div class="option" onclick="selectOption('${testId}', ${index})">
+                                ${index + 1}) ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                questionsContainer.appendChild(questionElement);
+                
+                // Обновить навигацию
+                updateNavigation(testId);
+            }
+        }
+
+        // Выбрать вариант ответа
+        function selectOption(testId, optionIndex) {
+            const question = tests[testId][currentQuestions[testId]];
+            const options = document.querySelectorAll(`#${testId}-questions .option`);
+            
+            // Сбросить все варианты
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+            });
+            
+            // Подсветить правильный ответ
+            if (optionIndex === question.correct) {
+                options[optionIndex].classList.add('correct');
+            } else {
+                options[optionIndex].classList.add('incorrect');
+                options[question.correct].classList.add('correct');
+            }
+        }
+
+        // Перейти к следующему вопросу
+        function nextQuestion(testId) {
+            if (currentQuestions[testId] < tests[testId].length - 1) {
+                currentQuestions[testId]++;
+                loadQuestions(testId);
+            } else {
+                // Показать результаты
+                showResults(testId);
+            }
+        }
+
+        // Перейти к предыдущему вопросу
+        function prevQuestion(testId) {
+            if (currentQuestions[testId] > 0) {
+                currentQuestions[testId]--;
+                loadQuestions(testId);
+            }
+        }
+
+        // Обновить навигацию
+        function updateNavigation(testId) {
+            const prevBtn = document.getElementById(`${testId}-prev`);
+            const nextBtn = document.getElementById(`${testId}-next`);
+            
+            prevBtn.disabled = currentQuestions[testId] === 0;
+            
+            if (currentQuestions[testId] === tests[testId].length - 1) {
+                nextBtn.textContent = 'Завершить тест';
+            } else {
+                nextBtn.textContent = 'Следующий';
+            }
+        }
+
+        // Показать результаты теста
+        function showResults(testId) {
+            const resultsContainer = document.getElementById(`${testId}-results`);
+            resultsContainer.innerHTML = `
+                <h3>Тест завершен!</h3>
+                <p>Вы ответили на все вопросы. Для просмотра результатов необходимо реализовать подсчет правильных ответов.</p>
+            `;
+            
+            const questionsContainer = document.getElementById(`${testId}-questions`);
+            questionsContainer.style.display = 'none';
+            
+            const navigation = document.querySelector(`#${testId}-test .navigation`);
+            navigation.style.display = 'none';
+        }
+
+        // Инициализация при загрузке страницы
+        window.onload = function() {
+            showMainMenu();
+        };
+    </script>
+</body>
+</html>
